@@ -21,13 +21,7 @@ def hide_sensitive_info(response):
         information to be hidden.
 
     """
-    report_settings = settings.get("report", {})
-    request = response.request
-    request_settings = report_settings.get("hide_request", {})
-    response_settings = report_settings.get("hide_response", {})
-
-    _hide(request, request_settings)
-    _hide(response, response_settings)
+    pass
 
 
 def _hide(http_msg, hide_settings):
@@ -41,10 +35,7 @@ def _hide(http_msg, hide_settings):
         attribute (body, headers, url params)
 
     """
-    for http_attr in hide_settings:
-        secret_fields = hide_settings[http_attr]
-        for field in secret_fields:
-            _override_info(http_msg, http_attr, field)
+    pass
 
 
 def _override_info(http_msg, http_attr, secret_field):
@@ -59,14 +50,7 @@ def _override_info(http_msg, http_attr, secret_field):
         secret_field [string]: the secret field which its value must be hidden.
 
     """
-    if http_attr == URL:
-        _override_url(http_msg, secret_field)
-    elif http_attr == HEADERS:
-        _override_headers(http_msg, secret_field)
-    elif http_attr == PARAMS:
-        _override_params(http_msg, secret_field)
-    elif http_attr == BODY:
-        _override_body(http_msg, secret_field)
+    pass
 
 
 def _override_url(http_msg, secret_field):
@@ -80,15 +64,7 @@ def _override_url(http_msg, secret_field):
         in the URL.
 
     """
-    url_parsed = urlparse(http_msg.url)
-    if secret_field in url_parsed.path:
-        new_url = url_parsed._replace(
-            path=url_parsed.path.replace(
-                secret_field, SENSITIVE_INFO_SUBSTITUTION_FLAG
-            )
-        )
-        new_url = urlunparse(new_url)
-        http_msg.url = new_url
+    pass
 
 
 def _override_headers(http_msg, secret_field):
@@ -102,8 +78,7 @@ def _override_headers(http_msg, secret_field):
         in the request/response headers.
 
     """
-    if secret_field in http_msg.headers:
-        http_msg.headers[secret_field] = SENSITIVE_INFO_SUBSTITUTION_FLAG
+    pass
 
 
 def _override_params(http_msg, secret_field):
@@ -117,21 +92,7 @@ def _override_params(http_msg, secret_field):
         in the request/response params.
 
     """
-    url_parsed = urlparse(http_msg.url)
-    query_parsed = parse_qs(url_parsed.query)
-    param_values_list = query_parsed.get(secret_field, [])
-    param_values_list.sort(key=len, reverse=True)
-
-    for value in param_values_list:
-        url_parsed = url_parsed._replace(
-            query=url_parsed.query.replace(
-                f"{secret_field}={value}",
-                f"{secret_field}={SENSITIVE_INFO_SUBSTITUTION_FLAG}",
-            )
-        )
-
-    new_url = urlunparse(url_parsed)
-    http_msg.url = new_url
+    pass
 
 
 def _override_body(http_msg, secret_field):
@@ -145,11 +106,7 @@ def _override_body(http_msg, secret_field):
         in the request/response body/content.
 
     """
-    body = _get_json_body(http_msg)
-
-    if body and secret_field in body:
-        body[secret_field] = SENSITIVE_INFO_SUBSTITUTION_FLAG
-        _set_json_body(http_msg, body)
+    pass
 
 
 def _get_json_body(http_msg):
@@ -163,16 +120,7 @@ def _get_json_body(http_msg):
         [dict]: the json body/content of the request/response.
 
     """
-    try:
-        body = _get_body(http_msg)
-
-        if not body:
-            return None
-
-        return json.loads(body)
-
-    except JSONDecodeError:
-        return None
+    pass
 
 
 def _get_body(http_msg):
@@ -185,10 +133,7 @@ def _get_body(http_msg):
     Returns:
         [bytes]: the body/content of the request/response.
     """
-    if not hasattr(http_msg, "body"):
-        return http_msg._content
-
-    return http_msg.body
+    pass
 
 
 def _set_json_body(http_msg, value):
@@ -200,8 +145,7 @@ def _set_json_body(http_msg, value):
         value [dict]: the json body/content of the request/response.
 
     """
-    value = json.dumps(value).encode("utf-8")
-    _set_body(http_msg, value)
+    pass
 
 
 def _set_body(http_msg, value):
@@ -213,8 +157,4 @@ def _set_body(http_msg, value):
         value [bytes]: the body/content of the request/response.
 
     """
-    if not hasattr(http_msg, "body"):
-        http_msg._content = value
-        return
-
-    http_msg.body = value
+    pass

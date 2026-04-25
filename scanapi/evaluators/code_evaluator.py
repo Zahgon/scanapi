@@ -41,21 +41,7 @@ class CodeEvaluator:
             (eg. 1/0)
 
         """
-        match = cls.python_code_pattern.search(str(sequence))
-
-        if not match:
-            return sequence
-
-        code = match.group("python_code")
-        response = spec_vars.get("response")
-
-        try:
-            if is_a_test_case:
-                return cls._assert_code(code, response)
-
-            return cls._evaluate_sequence(sequence, match, code, response)
-        except Exception as e:
-            raise InvalidPythonCodeError(str(e), code)
+        pass
 
     @classmethod
     def _get_allowed_modules(cls):
@@ -64,7 +50,7 @@ class CodeEvaluator:
         Returns:
             dict: Dictionary of module names to imported modules
         """
-        return {name: __import__(name) for name in cls.ALLOWED_MODULES}
+        pass
 
     @classmethod
     def _get_safe_globals(cls, response=None):
@@ -76,32 +62,7 @@ class CodeEvaluator:
         Returns:
             dict: Safe global context with restricted access
         """
-        safe_context = safe_globals.copy()
-        safe_context["__builtins__"] = safe_builtins.copy()
-
-        # Add iterator functions for generator expressions and comprehensions
-        safe_context["_iter_unpack_sequence_"] = iter
-        safe_context["_getiter_"] = iter
-        safe_context["_getattr_"] = getattr
-        # Enables obj[key] access
-        safe_context["_getitem_"] = lambda obj, key: obj[key]
-        essential_builtins = {
-            "all": all,
-            "any": any,
-            "len": len,
-            "str": str,
-        }
-        safe_context["__builtins__"].update(essential_builtins)
-
-        # Add allowed modules via dynamic import
-        allowed_modules = cls._get_allowed_modules()
-        safe_context.update(allowed_modules)
-
-        # Add response object if provided (for test assertions)
-        if response is not None:
-            safe_context["response"] = response
-
-        return safe_context
+        pass
 
     @classmethod
     def _safe_eval(cls, code, global_context=None):
@@ -117,36 +78,7 @@ class CodeEvaluator:
         Raises:
             InvalidPythonCodeError: If code compilation or execution fails
         """
-        if global_context is None:
-            global_context = cls._get_safe_globals()
-
-        try:
-            # Strip whitespace to avoid IndentationError in RestrictedPython
-            clean_code = code.strip()
-
-            # Compile the code with restrictions using mode='eval'
-            compiled_code = compile_restricted(
-                clean_code, "<string>", mode="eval"
-            )
-            if compiled_code is None:
-                raise InvalidPythonCodeError(
-                    "Failed to compile restricted code", code
-                )
-
-            # Execute the compiled code securely
-            result = eval(compiled_code, global_context)
-            return result
-
-        except SyntaxError as e:
-            logger.error(
-                "Syntax error in Python code: '%s' - %s", clean_code, str(e)
-            )
-            raise InvalidPythonCodeError(f"Syntax error in code: {e}", code)
-        except Exception as e:
-            logger.error(
-                "Runtime error in Python code: '%s' - %s", clean_code, str(e)
-            )
-            raise InvalidPythonCodeError(str(e), code)
+        pass
 
     @classmethod
     def _assert_code(cls, code, response):
@@ -170,18 +102,9 @@ class CodeEvaluator:
             AssertionError: If python statement evaluates False
 
         """
-        global_context = cls._get_safe_globals(response)
-        ok = cls._safe_eval(code, global_context)
-        return ok, None if ok else code.strip()
+        pass
 
     @classmethod
     def _evaluate_sequence(cls, sequence, match, code, response):
         # To avoid circular imports
-        from scanapi.evaluators.string_evaluator import StringEvaluator
-
-        global_context = cls._get_safe_globals(response)
-        result = cls._safe_eval(code, global_context)
-
-        return StringEvaluator.replace_var_with_value(
-            sequence, match.group(), str(result)
-        )
+        pass

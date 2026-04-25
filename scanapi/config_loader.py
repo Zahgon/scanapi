@@ -26,16 +26,7 @@ class Loader(yaml.SafeLoader):
 
 def construct_include(loader: Loader, node: yaml.Node) -> Any:
     """Include file referenced at node."""
-    if not isinstance(node, yaml.ScalarNode):
-        include_node_str = yaml.serialize(node).strip()
-        message = f"Include tag value is not a scalar: {include_node_str}"
-        raise BadConfigIncludeError(message)
-    include_file_path = str(loader.construct_scalar(node))
-    relative_path = os.path.join(loader.root, include_file_path)
-    full_path = os.path.abspath(relative_path)
-
-    with open(full_path) as f:
-        return yaml.load(f, Loader)
+    pass
 
 
 def load_config_file(file_path):
@@ -43,17 +34,7 @@ def load_config_file(file_path):
     Loads configuration file. If non-empty file exists reads data and
     returns it.
     """
-    with open(file_path, "r") as stream:
-        logger.info(
-            f"Loading file [deep_sky_blue1 underline]{file_path}",
-            extra={"highlighter": None},
-        )
-        data = yaml.load(stream, Loader)
-
-        if not data:
-            raise EmptyConfigFileError(file_path)
-
-        return data
+    pass
 
 
 yaml.add_constructor("!include", construct_include, Loader)

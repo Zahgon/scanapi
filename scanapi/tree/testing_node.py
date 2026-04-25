@@ -26,15 +26,15 @@ class TestingNode:
 
     @property
     def name(self):
-        return self[NAME_KEY]
+        pass
 
     @property
     def assertion(self):
-        return self[ASSERT_KEY]
+        pass
 
     @property
     def full_name(self):
-        return f"{self.request.endpoint.name}::{self.request.name}::{self.name}"
+        pass
 
     def run(self):
         """Run the test assertion and return its result.
@@ -50,30 +50,7 @@ class TestingNode:
                 - failure (any): Assertion failure details, if available.
                 - error (str): Error message if an exception was raised.
         """
-
-        try:
-            (
-                passed,
-                failure,
-            ) = self.request.endpoint.spec_vars.evaluate_assertion(
-                self.assertion
-            )
-
-            status = TestStatus.PASSED if passed else TestStatus.FAILED
-            error = None
-        except Exception as e:
-            status = TestStatus.ERROR
-            failure = None
-            error = str(e)
-
-        self._process_result(status)
-
-        return {
-            "name": self.full_name,
-            "status": status,
-            "failure": failure,
-            "error": error,
-        }
+        pass
 
     @staticmethod
     def _process_result(status):
@@ -83,18 +60,7 @@ class TestingNode:
         Args:
             status [string]: the status of the test: passed, failed or error.
         """
-        if status == TestStatus.ERROR:
-            session.increment_errors()
-            return
-
-        if status == TestStatus.FAILED:
-            session.increment_failures()
-            return
-
-        if status == TestStatus.PASSED:
-            session.increment_successes()
+        pass
 
     def _validate(self):
-        validate_keys(
-            self.spec.keys(), self.ALLOWED_KEYS, self.REQUIRED_KEYS, self.SCOPE
-        )
+        pass

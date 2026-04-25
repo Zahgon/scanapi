@@ -37,10 +37,7 @@ class StringEvaluator:
                 -  [string]: None if valid evaluation, tested code otherwise
 
         """
-        sequence = cls._evaluate_env_var(sequence)
-        sequence = cls._evaluate_custom_var(sequence, spec_vars)
-
-        return CodeEvaluator.evaluate(sequence, spec_vars, is_a_test_case)
+        pass
 
     @classmethod
     def _evaluate_env_var(cls, sequence):
@@ -54,24 +51,7 @@ class StringEvaluator:
             sequence[string]: sequence of characters with all valid
             environment variables replaced
         """
-        matches = cls.variable_pattern.finditer(sequence)
-
-        for match in matches:
-            variable_name = match.group("variable")
-
-            if any(letter.islower() for letter in variable_name):
-                continue
-
-            try:
-                variable_value = os.environ[variable_name]
-            except KeyError as e:
-                raise BadConfigurationError(e)
-
-            sequence = cls.replace_var_with_value(
-                sequence, match.group(), variable_value
-            )
-
-        return sequence
+        pass
 
     @classmethod
     def _evaluate_custom_var(cls, sequence, spec_vars):
@@ -86,24 +66,7 @@ class StringEvaluator:
             sequence[string]: sequence of characters with all valid
             custom variables replaced
         """
-        matches = cls.variable_pattern.finditer(sequence)
-
-        for match in matches:
-            variable_name = match.group("variable")
-
-            if variable_name.isupper():
-                continue
-
-            if not spec_vars.get(variable_name):
-                continue
-
-            variable_value = spec_vars.get(variable_name)
-
-            sequence = cls.replace_var_with_value(
-                sequence, match.group(), variable_value
-            )
-
-        return sequence
+        pass
 
     @classmethod
     def replace_var_with_value(cls, sequence, variable, variable_value):
@@ -119,8 +82,4 @@ class StringEvaluator:
             sequence[string]: sequence of characters with all occurrences of
             the current variable replaced
         """
-        if variable == sequence:
-            return variable_value
-
-        variable = re.escape(variable)
-        return re.sub(variable, str(variable_value), sequence)
+        pass

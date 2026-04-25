@@ -36,23 +36,11 @@ class Reporter:
             None
 
         """
-        template_path = self.template if self.template else "report.html"
-        has_external_template = bool(self.template)
-        context = self._build_context(results)
-
-        content = render(template_path, context, has_external_template)
-
-        with open(self.output_path, "w", newline="\n") as doc:
-            doc.write(content)
-
-        write_report_path(self.output_path.resolve().as_uri())
-
-        if open_in_browser:
-            self._open_in_browser()
+        pass
 
     def _open_in_browser(self):
         """Open the results file on a browser"""
-        webbrowser.open(self.output_path.resolve().as_uri())
+        pass
 
     @staticmethod
     def _build_context(results):
@@ -65,15 +53,4 @@ class Reporter:
             [dict]: values required to render template.
 
         """
-        try:
-            scanapi_version = version("scanapi")
-        except PackageNotFoundError:
-            scanapi_version = "unknown"
-
-        return {
-            "now": datetime.datetime.now().replace(microsecond=0),
-            "project_name": settings.get("project_name", ""),
-            "results": results,
-            "session": session,
-            "scanapi_version": scanapi_version,
-        }
+        pass

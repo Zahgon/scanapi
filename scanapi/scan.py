@@ -21,41 +21,7 @@ logger = logging.getLogger(__name__)
 
 def scan():
     """Caller function that tries to scans the file and write the report."""
-    spec_path = settings["spec_path"]
-
-    try:
-        api_spec = load_config_file(spec_path)
-    except FileNotFoundError as e:
-        error_message = f"Could not find API spec file: {spec_path}. {str(e)}"
-        logger.error(error_message)
-        raise SystemExit(ExitCode.USAGE_ERROR)
-    except EmptyConfigFileError as e:
-        error_message = f"API spec file is empty. {str(e)}"
-        logger.error(error_message)
-        raise SystemExit(ExitCode.USAGE_ERROR)
-    except yaml.YAMLError as e:
-        error_message = "Error loading specification file."
-        error_message = "{}\nPyYAML: {}".format(error_message, str(e))
-        logger.error(error_message)
-        raise SystemExit(ExitCode.USAGE_ERROR)
-
-    try:
-        root_node = EndpointNode(api_spec)
-        results = root_node.run()
-
-    except (
-        InvalidKeyError,
-        KeyError,
-        InvalidPythonCodeError,
-    ) as e:
-        error_message = "Error loading API spec."
-        error_message = "{} {}".format(error_message, str(e))
-        logger.error(error_message)
-        raise SystemExit(ExitCode.USAGE_ERROR)
-
-    _write(results)
-    write_summary()
-    session.exit()
+    pass
 
 
 def _write(results):
@@ -67,18 +33,7 @@ def _write(results):
     Returns:
         None
     """
-    no_report = settings["no_report"]
-    open_browser = settings["open_browser"]
-
-    if no_report:
-        write_results(results)
-        return
-
-    try:
-        _write_report(results, open_browser)
-    except (BadConfigurationError, InvalidPythonCodeError) as e:
-        logger.error(e)
-        raise SystemExit(ExitCode.USAGE_ERROR)
+    pass
 
 
 def _write_report(results, open_browser):
@@ -88,5 +43,4 @@ def _write_report(results, open_browser):
     Returns:
         None
     """
-    reporter = Reporter(settings["output_path"], settings["template"])
-    reporter.write(results, open_browser)
+    pass

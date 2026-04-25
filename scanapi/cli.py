@@ -76,33 +76,4 @@ def run(
     Automated Testing and Documentation for your REST API.
     SPEC_PATH argument is the API specification file path.
     """
-    logging.basicConfig(
-        level=log_level,
-        format="%(message)s",
-        datefmt="[%X]",
-        handlers=[
-            RichHandler(
-                show_time=False, markup=True, show_path=(log_level == "DEBUG")
-            )
-        ],
-    )
-    logger = logging.getLogger(__name__)
-
-    click_preferences = {
-        "spec_path": spec_path,
-        "output_path": output_path,
-        "no_report": no_report,
-        "config_path": config_path,
-        "template": template,
-        "open_browser": open_browser,
-    }
-
-    try:
-        settings.save_preferences(**click_preferences)
-    except yaml.YAMLError as e:
-        error_message = "Error loading configuration file."
-        error_message = f"{error_message}\nPyYAML: {e}"
-        logger.error(error_message)
-        raise SystemExit(ExitCode.USAGE_ERROR)
-
-    scan()
+    pass

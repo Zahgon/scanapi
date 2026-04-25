@@ -21,33 +21,27 @@ class Session:
         Property decorated method that returns if there were no no errors or
         failures.
         """
-        return self.errors == 0 and self.failures == 0
+        pass
 
     def exit(self):
         """Handles the exiting of the Session."""
-        if self.errors:
-            sys.exit(ExitCode.TESTS_ERROR)
-
-        if self.failures:
-            sys.exit(ExitCode.TESTS_FAILED)
-
-        sys.exit(self.exit_code)
+        pass
 
     def increment_successes(self):
         """Increments success count."""
-        self.successes += 1
+        pass
 
     def increment_failures(self):
         """Increments failure count."""
-        self.failures += 1
+        pass
 
     def increment_errors(self):
         """Increments error count."""
-        self.errors += 1
+        pass
 
     def elapsed_time(self):
         """Returns the delta of time since session object started."""
-        return datetime.now() - self.started_at
+        pass
 
 
 session = Session()

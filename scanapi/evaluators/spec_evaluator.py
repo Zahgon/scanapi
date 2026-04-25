@@ -34,7 +34,7 @@ class SpecEvaluator:
         Returns:
             The evaluated value of the element.
         """
-        return evaluate(element, self)
+        pass
 
     def evaluate_assertion(self, element):
         """Evaluate an assertion element.
@@ -45,7 +45,7 @@ class SpecEvaluator:
         Returns:
             Result of the evaluated assertion.
         """
-        return _evaluate_str(element, self, is_a_test_case=True)
+        pass
 
     def update(self, spec_vars, extras=None, filter_responses=False):
         """Update the evaluator registry with evaluated spec variables.
@@ -58,17 +58,7 @@ class SpecEvaluator:
             extras: Optional extra variables to include in the registry.
             filter_responses: Whether to filter out response-related variables.
         """
-        if extras is None:
-            extras = {}
-
-        if filter_responses:
-            spec_vars = self.filter_response_var(spec_vars)
-
-        values = {
-            key: evaluate(value, extras) for key, value in spec_vars.items()
-        }
-        self.registry.update(extras)
-        self.registry.update(values)
+        pass
 
     def get(self, key, default=None):
         """Retrieve a value from the registry.
@@ -81,10 +71,7 @@ class SpecEvaluator:
             Value associated with the given key or
             `default` if key is not present.
         """
-        try:
-            return self[key]
-        except KeyError:
-            return default
+        pass
 
     def __repr__(self):
         """Return a string representation of the evaluator registry."""
@@ -143,7 +130,7 @@ class SpecEvaluator:
         Returns:
             [list]: list of keys.
         """
-        return self.registry.keys()
+        pass
 
     @classmethod
     def filter_response_var(cls, spec_vars):
@@ -155,8 +142,7 @@ class SpecEvaluator:
             [dict]: filtered dictionary.
 
         """
-        pattern = re.compile(r"(?:(\s*response\.\w+))")
-        return {k: v for k, v in spec_vars.items() if not pattern.search(v)}
+        pass
 
 
 @singledispatch
@@ -175,7 +161,7 @@ def evaluate(expression, spec_vars):
         The evaluated result (or the original expression if
         no evaluation is needed).
     """
-    return expression
+    pass
 
 
 @evaluate.register(str)
@@ -192,7 +178,7 @@ def _evaluate_str(element, spec_vars, is_a_test_case=False):
     Returns:
         The evaluated result of the string expression.
     """
-    return StringEvaluator.evaluate(element, spec_vars, is_a_test_case)
+    pass
 
 
 @evaluate.register(dict)
@@ -207,7 +193,7 @@ def _evaluate_dict(element, spec_vars):
     Returns:
         A dictionary with evaluated values.
     """
-    return {key: evaluate(value, spec_vars) for key, value in element.items()}
+    pass
 
 
 @evaluate.register(list)
@@ -223,4 +209,4 @@ def _evaluate_collection(elements, spec_vars):
     Returns:
         A list with evaluated elements.
     """
-    return [evaluate(item, spec_vars) for item in elements]
+    pass

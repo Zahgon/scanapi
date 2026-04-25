@@ -71,75 +71,43 @@ class RequestNode:
 
     @property
     def http_method(self):
-        method = self.spec.get(METHOD_KEY, "get").upper()
-        if method not in self.ALLOWED_HTTP_METHODS:
-            raise HTTPMethodNotAllowedError(method, self.ALLOWED_HTTP_METHODS)
-
-        return method
+        pass
 
     @property
     def name(self):
-        return self[NAME_KEY]
+        pass
 
     @property
     def full_url_path(self):
-        base_path = self.endpoint.path
-        path = str(self.spec.get(PATH_KEY, ""))
-        full_url = join_urls(base_path, path)
-
-        self.endpoint.spec_vars.update(
-            self.spec.get(VARS_KEY, {}),
-            extras=dict(self.endpoint.spec_vars),
-            filter_responses=True,
-        )
-
-        return self.endpoint.spec_vars.evaluate(full_url)
+        pass
 
     @property
     def options(self):
-        endpoint_options = self.endpoint.options
-        options = self.spec.get(OPTIONS_KEY, {})
-
-        for option in options:
-            if option not in self.ALLOWED_OPTIONS:
-                raise InvalidKeyError(option, OPTIONS_KEY, self.ALLOWED_OPTIONS)
-
-        return self.endpoint.spec_vars.evaluate({**endpoint_options, **options})
+        pass
 
     @property
     def headers(self):
-        endpoint_headers = self.endpoint.headers
-        headers = self.spec.get(HEADERS_KEY, {})
-
-        return self.endpoint.spec_vars.evaluate({**endpoint_headers, **headers})
+        pass
 
     @property
     def params(self):
-        endpoint_params = self.endpoint.params
-        params = self.spec.get(PARAMS_KEY, {})
-
-        return self.endpoint.spec_vars.evaluate({**endpoint_params, **params})
+        pass
 
     @property
     def delay(self):
-        delay = self.spec.get(DELAY_KEY, 0)
-        return delay or self.endpoint.delay
+        pass
 
     @property
     def body(self):
-        body = self.spec.get(BODY_KEY)
-
-        return self.endpoint.spec_vars.evaluate(body)
+        pass
 
     @property
     def tests(self):
-        return (
-            TestingNode(spec, self) for spec in self.spec.get(TESTS_KEY, [])
-        )
+        pass
 
     @property
     def retry(self):
-        return self.spec.get(RETRY_KEY)
+        pass
 
     def run(self):
         """Make HTTP requests and generating test results for the given URLs.
@@ -149,57 +117,7 @@ class RequestNode:
             to be used by the report template.
 
         """
-        time.sleep(self.delay / 1000)
-
-        method = self.http_method
-        url = self.full_url_path
-        console.print(f"\n- Making request {method} {url}", highlight=False)
-
-        options = self.options
-        verify = options.pop("verify", True)
-        kwargs = dict(
-            headers=self.headers,
-            params=self.params,
-            json=self.body,
-            follow_redirects=False,
-            **options,
-        )
-
-        if not self._content_type_is_json(kwargs["headers"]):
-            kwargs["data"] = kwargs.pop("json")
-
-        with session_with_retry(self.retry, verify) as session:
-            response = session.request(method, url, **kwargs)
-
-        extras = dict(self.endpoint.spec_vars)
-        extras["response"] = response
-
-        self.endpoint.propagate_spec_vars(
-            self.spec.get(VARS_KEY, {}),
-            extras=extras,
-        )
-
-        self.endpoint.spec_vars.update({"response": response})
-        tests_results = self._run_tests()
-        hide_sensitive_info(response)
-
-        del self.endpoint.spec_vars["response"]
-
-        result = {
-            "response": response,
-            "tests_results": tests_results,
-            "no_failure": all(
-                test_result["status"] == TestStatus.PASSED
-                for test_result in tests_results
-            ),
-            "request_node_name": self.name,
-            "options": self.options,
-        }
-
-        if not settings["no_report"]:
-            write_result(result)
-
-        return result
+        pass
 
     def _run_tests(self):
         """Run all tests cases of request node.
@@ -208,7 +126,7 @@ class RequestNode:
             [dict]: Return a dict with test result.
 
         """
-        return [test.run() for test in self.tests]
+        pass
 
     def _validate(self):
         """Validate spec keys.
@@ -217,9 +135,7 @@ class RequestNode:
             None
 
         """
-        validate_keys(
-            self.spec.keys(), self.ALLOWED_KEYS, self.REQUIRED_KEYS, self.SCOPE
-        )
+        pass
 
     @staticmethod
     def _content_type_is_json(headers):
@@ -231,7 +147,4 @@ class RequestNode:
         Returns:
             bool: False if convent-type is different then application/json
         """
-        return not any(
-            k.lower() == "content-type" and v.lower() != "application/json"
-            for k, v in headers.items()
-        )
+        pass
